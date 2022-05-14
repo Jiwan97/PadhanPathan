@@ -1,0 +1,243 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load hasLiked %}
+{% block title %}
+    <title>Learn To Earn</title>
+{% endblock%}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'typography.css'%}">
+    <div class="all-title-box">
+		<div class="container text-center">
+			<h1>Courses<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
+		</div>
+	</div>
+    <section id="courses-part" class="pt-20 pb-120 gray-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="courses-top-search">
+                        <ul class="nav float-left" id="myTab" role="tablist">
+                            <li class="nav-item">
+                                <a class="active" id="courses-grid-tab" data-toggle="tab" href="#courses-grid" role="tab" aria-controls="courses-grid" aria-selected="true"><i class="fa fa-th-large"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a  id="courses-list-tab" data-toggle="tab" href="#courses-list" role="tab" aria-controls="courses-list" aria-selected="false"><i class="fa fa-th-list"></i></a>
+                            </li>
+
+                        </ul>
+
+                        <div class="courses-search float-right">
+                            <form method="get" action="#">
+                                <input name="title_contains" type="text" placeholder="Search">
+                                <button type="button"><i class="fa fa-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="courses-grid" role="tabpanel" aria-labelledby="courses-grid-tab">
+                    <div class="row">
+                        {% for course in courses %}
+                        <div id="course-{{course.id}}" class="col-lg-4 col-md-6">
+                            <div class="singel-course mt-30">
+                                <div class="thum">
+                                    <div class="image">
+                                        <img src="/{{course.course_pic}}" height="190px" alt="Course">
+                                    </div>
+                                    <div class="price">
+                                        <span>Free</span>
+                                    </div>
+                                </div>
+                                <div class="cont">
+                                    <ul>
+                                        {% if course.getStars %}
+                                        {% for i in course.getStars %}
+                                            {% if 'half' in i %}
+                                            <li><i class="fa fa-star-half-o"></i></li>
+                                            {% elif '' in i %}
+                                            <li><i class="fa fa-star-o"></i></li>
+                                            {% else %}
+                                            <li><i class="fa fa-star"></i></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                                            <li><i class="fa fa-star-o"></i></li>
+                                            <li><i class="fa fa-star-o"></i></li>
+                                            <li><i class="fa fa-star-o"></i></li>
+                                            <li><i class="fa fa-star-o"></i></li>
+                                            <li><i class="fa fa-star-o"></i></li>
+                                        {% endif %}
+                                    </ul>
+                                    <span style="float:right;"> <i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</span>
+                                    <a href="/courses/courseDesk/{{course.id}}"><h4>{{course.course_name}}</h4></a>
+                                    <div class="course-teacher">
+                                        <div class="thum">
+                                            <a href="#">
+                                                {% if course.user.profile.profile_pic %}
+                                                    <img src="/{{course.user.profile.profile_pic}}" alt="teacher">
+                                                {% else %}
+                                                    <div class="rounded-circle"  style="background-color: black;width: 40px;height: 40px;margin-top: 5px;position: relative;top: -3px;">
+                                                       <p style="color:white;text-transform:uppercase;font-size: 20px;position: relative; top: 7px;left: 14px;" >{{ course.user.profile.firstname.0 }}</p>
+                                                    </div>
+                                                {% endif %}
+                                            </a>
+                                        </div>
+                                        <div class="name">
+                                            <a href="#"><h6>{{course.user.profile.firstname}} {{course.user.profile.lastname}}</h6></a>
+                                        </div>
+                                        <div class="admin">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-user"></i><span>{{course.getEnroll}}</span></a></li>
+                                                {% if request.user|hasLiked:course.id %}
+                                                <li><a><i id="like-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer; color:#ffc600"></i><span id="count-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                {% else %}
+                                                <li><a><i id="like-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer;"></i><span id="count-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                {% endif %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="courses-list" role="tabpanel" aria-labelledby="courses-list-tab">
+                    <div class="row">
+                        {% for course in courses %}
+                        <div id="course1-{{course.id}}" class="col-lg-12">
+                            <div class="singel-course mt-30">
+                                <div class="row no-gutters">
+                                    <div class="col-md-6">
+                                        <div class="thum">
+                                            <div class="image">
+                                                <img src="/{{course.course_pic}}" alt="Course">
+                                            </div>
+                                            <div class="price">
+                                                <span>Free</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="cont">
+                                            <ul>
+                                            {% if course.getStars %}
+                                            {% for i in course.getStars %}
+                                                {% if 'half' in i %}
+                                                <li><i class="fa fa-star-half-o"></i></li>
+                                                {% elif '' in i %}
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                {% else %}
+                                                <li><i class="fa fa-star"></i></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                            {% endif %}
+                                        </ul>
+                                        <span style="float:right;"> <i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</span>
+                                            <a href="/courses/courseDesk/{{course.id}}"><h4>{{course.course_name}}</h4></a>
+                                            <div class="course-teacher">
+                                                <div class="thum">
+                                                    <a href="#"><img src="/{{course.user.profile.profile_pic}}" alt="teacher"></a>
+                                                </div>
+                                                <div class="name">
+                                                    <a href="#"><h6>{{course.user.profile.firstname}} {{course.user.profile.lastname}}</h6></a>
+                                                </div>
+                                                <div class="admin">
+                                                    <ul>
+                                                        <li><a href="#"><i class="fa fa-user"></i><span>{{course.getEnroll}}</span></a></li>
+                                                        {% if request.user|hasLiked:course.id %}
+                                                        <li><a><i id="like1-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer; color:#ffc600"></i><span id="count1-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                        {% else %}
+                                                        <li><a><i id="like1-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer;"></i><span id="count1-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if courses.has_other_pages %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <nav class="courses-pagination mt-50">
+                        <ul class="pagination justify-content-center">
+                            {% if courses.has_previous %}
+                            <li class="page-item">
+                                <a href="?page={{ courses.previous_page_number }}" aria-label="Previous">
+                                    <i class="fa fa-angle-left"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% for num in courses.paginator.page_range %}
+                                {% if courses.number == num %}
+                                <li class="page-item"><a class="active" href="?page={{ num }}">{{ num }}</a></li>
+                                {% elif num > courses.number|add:'-3' and num < courses.number|add:'3' %}
+                                <li class="page-item"><a href="?page={{ num }}">{{ num }}</a></li>
+                                {% endif %}
+                            {% endfor %}
+							{% if courses.has_next %}
+                            <li class="page-item">
+                                <a href="?page={{ courses.next_page_number }}" aria-label="Next">
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+<script>
+    function like(id) {
+        $.ajax({
+            url: '{% url 'courseLike' %}',
+            data: {
+                'id': id,
+            },
+            success:function(response){
+                console.log(response)
+                var messages = $(response).find('#mesg')
+                console.log(messages)
+                var messages_c = $(messages).attr('class')
+                console.log(messages_c)
+                console.log(messages.text())
+                var text = $('#count-'+id).text();
+                $('#mesgg').removeAttr("class");
+                $('#mesgg').addClass(messages_c);
+                $('#mesgg').text(messages.text());
+                $('#mesgg').animate({left:'0px'},600);
+                $('#course-'+id).remove()
+                $('#course1-'+id).remove()
+                $('.fa-heart').css('pointer-events', 'none');
+                value =parseInt(text) - 1;
+                $('#count-'+id).empty()
+                $('#count1-'+id).empty()
+                $('#count-'+id).append(`${value}`)
+                $('#count1-'+id).append(`${value}`)
+                $('#like-'+id).css('color', '');
+                $('#like1-'+id).css('color', '');
+                window.setTimeout(function() {
+                    $('.fa-heart').css('pointer-events', '');
+                    $('#mesgg').animate({left:'600px'});
+                }, 3000);
+            }
+        });
+	}
+</script>
+{% endblock %}
