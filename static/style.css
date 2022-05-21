@@ -6669,8 +6669,188 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#391800', end
     border-radius:20px
 }
 
+/* Report Courses */
+.radioT {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
 
+.radioT input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+
+.checkmark {
+  position: absolute;
+  top: 6px;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+
+.radioT:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+
+.radioT input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+
+.radioT input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.radioT .checkmark:after {
+ 	top: 9px;
+	left: 9px;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: white;
+}
+/* Report Courses */
+
+.addpost{
+    position: relative;
+    left: 630px;
+    bottom: 10px;
+}
+@media (max-width: 1000px){
+.message-box4{
+	margin-left:65px;
+	font-weight:bold;
+	font-size:50px;
+}
+}
+.message-box4 h4 {
+    text-transform: uppercase;
+    padding: 0;
+    margin: 0 0 5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+
+}
+.message-box h4 {
+    text-transform: uppercase;
+    padding: 0;
+    margin: 0 0 5px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 15px;
+
+}
+
+.message-box h2 {
+    font-size: 38px;
+    font-weight: 400;
+    padding: 0 0 10px;
+    margin: 0;
+    line-height: 62px;
+    margin-top: 0;
+    text-transform: none;
+}
+
+
+
+.message-box .lead {
+    padding-top: 10px;
+    font-size: 19px;
+    font-style: italic;
+    color: #999;
+    padding-bottom: 0;
+}
+
+.card22 {
+    box-shadow: 0px 4px 8px 0px #757575;
+    border-radius: 2rem;
+	width:400px;
+	height:300px
+}
+.postbycard {
+
+    border-radius: 1rem;
+	width:250px;
+	height:100px;
+	margin-left:100px;
+}
+.card21 {
+    box-shadow: 0px 4px 8px 0px #757575;
+    border-radius: 2rem;
+
+	height:950px;
+}
+.card23 {
+    box-shadow: 0px 4px 8px 0px #757575;
+    border-radius: 2rem;
+}
+.card24 {
+
+    border: 1px solid;
+}
+
+.TUcard {
+	border: 1px solid;
+	width:45px;
+}
+.card2 {
+    margin: 0px 40px
+}
+.seouser {
+    width: 60px;
+    height: 60px
+
+}
+
+.section.wb {
+    background-color: #ffffff;
+}
+
+.section.lb {
+    background-color: #f2f3f5;
+}
+
+.section.db {
+    background-color: #1f1f1f;
+}
+
+.section.color1 {
+    background-color: #448AFF;
+}
+.section.cl {
+	background-color: #2d3032;
+}
+.message-box4{
+	margin-left:170px;
+}
+.st{
+position: relative;
+margin-bottom:100px;
+top: 90px;
+}
 
 
 

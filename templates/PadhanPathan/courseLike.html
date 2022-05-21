@@ -2,7 +2,7 @@
 {% load static %}
 {% load hasLiked %}
 {% block title %}
-    <title>Learn To Earn</title>
+     <title>PadhanPathan</title>
 {% endblock%}
 
 {% block content %}
@@ -40,6 +40,7 @@
               <div class="tab-pane fade show active" id="courses-grid" role="tabpanel" aria-labelledby="courses-grid-tab">
                     <div class="row">
                         {% for course in courses %}
+                        {% if not course.hide %}
                         <div id="course-{{course.id}}" class="col-lg-4 col-md-6">
                             <div class="singel-course mt-30">
                                 <div class="thum">
@@ -101,6 +102,7 @@
                                 </div>
                             </div>
                         </div>
+                         {% endif %}
                         {% endfor %}
                     </div>
                 </div>

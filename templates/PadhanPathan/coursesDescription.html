@@ -1,11 +1,12 @@
 {% extends 'layout.html' %}
 {% load static %}
 {% load hasLiked %}
+{% load hasReported %}
 {% load hasAttemptedTest %}
 {% load hasAttemptedExam %}
 {% load bootstrap %}
 {% block title %}
-    <title>Learn To Earn</title>
+     <title>PadhanPathan</title>
 {% endblock%}
 
 {% block content %}
@@ -46,6 +47,61 @@ p a{
     float:right;
 }
 </style>
+<div class="modal fade" id="edit0" style="z-index:2002;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content mt-20">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel0">Report Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="rate-form" id="reportForm" method="POST" action="#">
+            {% csrf_token %}
+            <label class="radioT">Racist Question
+              <input type="radio" name="radio" value=1>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Sexual Harassment
+              <input type="radio" name="radio" value=2>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Harmful and Dangerous
+              <input required type="radio" name="radio" value=3>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Child Abuse
+              <input type="radio" name="radio" value=4>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Spam or Misleading
+              <input type="radio" name="radio" value=5>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Violent or Repulsive Content
+              <input type="radio" name="radio" value=6>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Hateful or Abusive Content
+              <input type="radio" name="radio" value=7>
+              <span class="checkmark"></span>
+            </label>
+            <input hidden="hidden" name="ansid" id="ansid">
+          <div class="form-group">
+            <label for="edit-comment" class="col-form-label">Say More About How the Question Was:</label>
+            <textarea class="form-control" required name="comments" id="edit-comment0"></textarea>
+          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close and Save Changes</button>
+                <button type="submit"  id="report" class="btn btn-primary">Confirm Report</button>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
 <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -143,6 +199,16 @@ p a{
                                             {% endif %}
                                                 <li  class="rating"><i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</li>
                                         </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="report">
+                                        {% if request.user|hasReported:course.id %}
+                                            <a style="margin-left:15px; font-size:15px; text-decoration:underline!important;">Course Reported</a>
+                                        {% else %}
+                                        <i class="fa fa-file" aria-hidden="true"></i>
+                                        <a data-target="#edit0" data-toggle="modal" id="report_data" data-whatever="report_data" style=" font-size:15px; text-decoration:underline!important;">Report</a>
+                                         {% endif %}
                                     </div>
                                 </li>
                             </ul>
@@ -359,7 +425,7 @@ p a{
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <div class="form-singel">
-                                                            <button type="submit"  class="btn main-btn">Post Review</button>
+                                                            <button type="submit" id="post_review" class="btn main-btn">Post Review</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -703,7 +769,16 @@ p a{
 
 <script src="/static/js/StarRating/star.js"></script>
 <script type="text/javascript">
-
+    $( document ).ready(function() {
+        $('#edit0').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget)
+          var dilemma = button.data('whatever')
+          var ansid = button.data('ansid')
+          var modal = $(this)
+          modal.find('.modal-body #report').attr('name', dilemma);
+          modal.find('.modal-body #ansid').val(ansid)
+        });
+    });
 
     $( document ).ready(function() {
         $('#edit').on('show.bs.modal', function (event) {

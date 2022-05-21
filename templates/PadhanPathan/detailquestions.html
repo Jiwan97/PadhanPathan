@@ -1,0 +1,320 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+    <title>PadhanPathan</title>
+{% endblock%}
+
+{% block content %}
+
+
+
+<div class="modal fade" id="edit" style="z-index:2002;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content mt-20">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Report Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="rate-form" id="reportForm" method="POST" action="#">
+            {% csrf_token %}
+            <label class="radioT">Racist Question
+              <input type="radio" name="radio" value=1>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Sexual Harassment
+              <input type="radio" name="radio" value=2>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Harmful and Dangerous
+              <input required type="radio" name="radio" value=3>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Child Abuse
+              <input type="radio" name="radio" value=4>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Spam or Misleading
+              <input type="radio" name="radio" value=5>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Violent or Repulsive Content
+              <input type="radio" name="radio" value=6>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Hateful or Abusive Content
+              <input type="radio" name="radio" value=7>
+              <span class="checkmark"></span>
+            </label>
+            <input hidden="hidden" name="ansid" id="ansid">
+          <div class="form-group">
+            <label for="edit-comment" class="col-form-label">Say More About How the Question Was:</label>
+            <textarea class="form-control" required name="comments" id="edit-comment"></textarea>
+          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close and Save Changes</button>
+                <button type="submit"  id="report" class="btn btn-primary">Confirm Report</button>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="overviews">
+    <div class="st container" style="">
+        <div class="align-items-center">
+            <div class="mb-5 ">
+                <div class="">
+                    <div id="overview">
+                        <div class="container">
+                            <div class="mb-3 card card24" style="font-size:17px;">
+                                <div class="row" style="margin-top:30px;">
+                                    <div class="col-md-1 ">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div style="margin-top:10px;" class="ml-2 row">
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <div style="margin-left:3px; " class="col-lg-12">
+                                                                <div class="row">
+                                                                    <a><i class="fa fa-angle-up"
+                                                                          style="font-weight:bold; margin-bottom:25px; font-size:20px;"
+                                                                          aria-hidden="true"></i></a>
+                                                                </div>
+                                                            </div>
+                                                            <div style=" margin-top:-30px;" class="col-lg-12">
+                                                                <div class="row">
+                                                                    <p style="font-weight:bold; font-size:15px;">20</p>
+                                                                </div>
+                                                            </div>
+                                                            <div style="margin-left:3px; margin-top:-30px"
+                                                                 class="col-lg-12">
+                                                                <div class="row">
+                                                                    <a><i class="fa fa-angle-down"
+                                                                          style="font-weight:bold; font-size:20px;"
+                                                                          aria-hidden="true"></i></a>
+                                                                </div>
+                                                            </div>
+                                                            <div style="margin-left:3px; margin-top:-30px"
+                                                                 class="col-lg-12">
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-10 p-0 rounded">
+                                        <p class="" style="font-size:0.6em;"> {{ single_question.question|safe }}</p>
+                                        <div class="row ml-3">
+                                            <div class="col-md-1 ">
+                                                <div class="row p-0">
+                                                    <div class="">
+                                                        <div style="border-right:1px solid; padding:0px 20px 0px 0px; ">
+                                                            <p style=" font-size:15px; padding:0 5px 0px 10px; "
+                                                               class="TUcard">
+                                                                TU
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <div style="border-right:1px solid;padding:0px 20px 0px 0px;  ">
+                                                            <p style=" margin-top:-10px; font-size:15px; padding:0 5px 0px 10px; "
+                                                               class="TUcard">PU</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <div
+                                                                style="border-right:1px solid; padding:0px 20px 0px 0px;  ">
+                                                            <p style=" margin-top:-10px; font-size:15px; padding:0 5px 0px 10px; "
+                                                               class="TUcard">KU</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-11 ">
+                                                <p style=" margin-top:5px; font-size:10px; ">2021, 6 SEM, Spring | 2019,
+                                                    5 SEM, Fall</p>
+                                                <p style=" margin-top:5px; font-size:10px; ">2021, 6 SEM, Spring | 2019
+                                                </p>
+                                                <p style=" margin-top:5px; font-size:10px; ">2021, 6 SEM, Spring </p>
+                                            </div>
+                                        </div>
+                                        <div class="row ">
+                                            <div class="col-md-6">
+                                                <div class="row">
+                                                    <p style="margin-left:10px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                       class="card">Django</p>
+                                                    <p style="margin-left:10px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                       class="card">python</p>
+                                                    <p style="margin-left:10px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                       class="card">html</p>
+                                                    <p style="margin-left:10px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                       class="card">ajax</p>
+                                                </div>
+                                                <div class="row">
+                                                    {% if request.user == single_question.Posted_by %}
+                                                        <a href="{% url 'updatequestions' single_question.id %}"
+                                                           style="margin-left:15px;  padding:0px 5px 0px 0px;  font-size:15px; text-decoration:underline!important;">Update</a>
+                                                    <a href="{% url 'deletequestions' single_question.id %}"
+                                                           style="margin-left:15px;  padding:0px 5px 0px 0px;  font-size:15px; text-decoration:underline!important;">Delete</a>
+                                                    <a href="{% url 'hidequestions' single_question.id %}"
+                                                           style="margin-left:15px;  padding:0px 5px 0px 0px;  font-size:15px; text-decoration:underline!important;">Hide</a>
+                                                    {% else %}
+                                                        {% if value %}
+                                                        <a style="margin-left:15px; font-size:15px; text-decoration:underline!important;">Question Reported</a>
+                                                        {% else %}
+                                                         <a data-target="#edit" data-toggle="modal" id="report_data" data-whatever="report_data" style="margin-left:15px; font-size:15px; text-decoration:underline!important;">Report</a>
+                                                         {% endif %}
+                                                    {% endif %}
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <div class="border rounded d-flex" style="margin-left:235px;">
+                                                    <div class="mx-2">
+                                                        <i style="font-size:40px; margin-top:15px;"
+                                                           class="fa fa-user" aria-hidden="true"></i>
+                                                    </div>
+                                                    <div class="">
+                                                        <div
+                                                                style=" margin-top:15px; font-size:12px; font-weight:bold; ">Posted By
+                                                            {{ single_question.Posted_by.profile.firstname }}
+                                                        </div>
+                                                        <div style="font-size:10px;  ">Posted
+                                                            On:-{{single_question.Posted_date }}
+                                                        </div>
+                                                        <div style="font-size:10px;  ">
+                                                            languages:-{{single_question.language }}
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="my-4">
+                                    <a style=" font-size:12px;" class="mx-5">{{answers_list | length}} Answers</a>
+                                    <div class="mx-4">
+                                        {% for i in answers_list %}
+                                        <div class="d-flex border rounded m-3 pb-3">
+                                            <div class="mx-3">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <div style="margin-top:10px;" class="ml-2 row">
+                                                            <div class="row">
+                                                                <div class="col-lg-2">
+                                                                    <div style="margin-left:3px; " class="col-lg-12">
+                                                                        <div class="row">
+                                                                            <a><i class="fa fa-angle-up"
+                                                                                  style="font-weight:bold; margin-bottom:25px; font-size:20px;"
+                                                                                  aria-hidden="true"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div style=" margin-top:-30px;" class="col-lg-12">
+                                                                        <div class="row">
+                                                                            <p style="font-weight:bold; font-size:15px;">
+                                                                                20
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div style="margin-left:3px; margin-top:-30px"
+                                                                         class="col-lg-12">
+                                                                        <div class="row">
+                                                                            <a><i class="fa fa-angle-down"
+                                                                                  style="font-weight:bold; font-size:20px;"
+                                                                                  aria-hidden="true"></i></a>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div style="margin-left:3px; margin-top:-30px"
+                                                                         class="col-lg-12">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-11">
+                                                <div class="row mt-2">
+                                                    <p style="margin-left:16px; font-size:12px; ">
+                                                        Posted By: {{ i.Posted_by.profile.firstname }}</p>
+                                                    <p style="margin-left:20px; font-size:12px; ">
+                                                        Posted On: {{ i.posted_date }}</p>
+                                                </div>
+                                                <p class="m-0"> {{ i.description|safe }}</p>
+
+                                            </div>
+                                        </div>
+
+                                        {% endfor %}
+                                        <div class="mt-4 px-1 p-0">
+                                            <div class="row p-0">
+                                                <div class="col-md-12">
+                                                    <small class="mx-3">Write your answer here.</small>
+                                                    <div class="form-group">
+                                                        <form action="{% url 'question_details' single_question.id %}"
+                                                              method="post" enctype="multipart/form-data" novalidate>
+                                                            {% csrf_token %}
+                                                            <div class=" col-sm-12 col-lg-12 ">
+                                                                {{ answer.media }}
+                                                                {{ answer.description }}
+                                                                <label style="color: red;">{{ answer.description.errors }}
+                                                                </label>
+
+                                                            </div>
+                                                            <button type="submit" name="post_answer"
+                                                                    class="btn btn-primary mx-3 text-center">Post
+                                                                Answers
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    $( document ).ready(function() {
+        $('#edit').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget)
+          var dilemma = button.data('whatever')
+          var ansid = button.data('ansid')
+          var modal = $(this)
+          modal.find('.modal-body #report').attr('name', dilemma);
+          modal.find('.modal-body #ansid').val(ansid)
+        });
+    });
+    $(document).ready(function () {
+
+        $( "#report_data" ).click(function() {
+              console.log("hello");
+              hideNav();
+            });
+        $( "#report_ans_data" ).click(function() {
+              console.log("hello");
+              hideNav();
+            });
+    function hideNav() {
+        $(".top-navbar").removeClass("is-shownUp").addClass("is-Hidden");
+    }
+    });
+</script>
+{% endblock %}

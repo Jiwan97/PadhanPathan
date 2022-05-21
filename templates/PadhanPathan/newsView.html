@@ -1,0 +1,359 @@
+{% extends 'layout.html' %}
+{% load hasReportedNews %}
+{% load static %}
+{% block title %}
+   <title>PadhanPathan</title>
+{% endblock%}
+
+{% block content %}
+<style>
+html {
+  scroll-behavior: smooth;
+}
+</style>
+<link rel="stylesheet" href="{% static 'typography.css'%}">
+<link rel="stylesheet" href="{% static '/shortcodes/shortcodes.css'%}">
+<div class="modal fade" id="edit0" style="z-index:2002;" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content mt-20">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel0">Report Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="rate-form" id="reportForm" method="POST" action="#">
+            {% csrf_token %}
+            <label class="radioT">Racist Question
+              <input type="radio" name="radio" value=1>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Sexual Harassment
+              <input type="radio" name="radio" value=2>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Harmful and Dangerous
+              <input required type="radio" name="radio" value=3>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Child Abuse
+              <input type="radio" name="radio" value=4>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Spam or Misleading
+              <input type="radio" name="radio" value=5>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Violent or Repulsive Content
+              <input type="radio" name="radio" value=6>
+              <span class="checkmark"></span>
+            </label>
+            <label class="radioT">Hateful or Abusive Content
+              <input type="radio" name="radio" value=7>
+              <span class="checkmark"></span>
+            </label>
+            <input hidden="hidden" name="ansid" id="ansid">
+          <div class="form-group">
+            <label  class="col-form-label">Say More About How the Question Was:</label>
+            <textarea class="form-control" required name="comments" id="edit-comment0"></textarea>
+          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close and Save Changes</button>
+                <button type="submit"  id="report" class="btn btn-primary">Confirm Report</button>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div class="content-block">
+	<div class="section-area section-sp1">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-xl-8">
+					<div class="recent-news">
+						<div class="action-box">
+							<img src="/{{news.news_pic}}" alt="">
+						</div>
+						<div class="info-bx">
+							<div class="post-date">
+								<span class="day">{{news.date_posted| date:"d"}}</span>
+									<span class="month">{{news.date_posted| date:"M"}}</span>
+							</div>
+							<ul class="media-post">
+								<li><a href="#"><i class="fa fa-calendar"></i>{{news.date_posted| date:"F d, Y"}}</a></li>
+								<li><a href="#comment-list"><i class="fa fa-comments-o"></i>{{news.getComments}} Comment</a></li>
+								<li><a href="#"><i class="fa fa-user"></i>by {{news.user.profile.firstname}} {{news.user.profile.lastname}}</a></li>
+								<li>
+                                    <div class="report">
+                                        {% if request.user|hasReportedNews:news.id %}
+                                            <a style="margin-left:15px; font-size:15px; text-decoration:underline!important;">News Reported</a>
+                                        {% else %}
+                                        <i class="fa fa-file" aria-hidden="true"></i>
+                                        <a data-target="#edit0" data-toggle="modal" id="report_data" data-whatever="report_data" style=" font-size:15px; text-decoration:underline!important;">Report</a>
+                                         {% endif %}
+                                    </div>
+                                </li>
+							</ul>
+							<h5 class="post-title"><a href="#">{{news.heading}}</a></h5>
+							<p style="white-space: pre-line;">{{news.content|safe}}</p>
+							<div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
+							<div class="widget_tag_cloud">
+								<h6>TAGS</h6>
+								<div class="tagcloud">
+									{% for tag in news.Tags.all %}
+										<a href="/newsPortal/category/{{tag.slug}}">{{tag}}</a>
+									{% endfor %}
+								</div>
+							</div>
+							<div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
+							<div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
+						</div>
+						<div class="news-author">
+							<div class="author-bio">
+								<a href="/viewprofile/{{news.user.profile.username}}"><h6 class="author_name" style="color:#c11e5f;">{{news.user.profile.firstname}} {{news.user.profile.lastname}}</h6></a>
+								<h4>Admin of <a href="/home">Learn To Earn</a></h4>
+							</div>
+							<div class="author-desc">
+								{% if news.user.profile.profile_pic %}
+      								<img src=/{{news.user.profile.profile_pic}} alt="about author">
+ 								{% else %}
+								    <div class="rounded-circle"  style="background-color: black;width: 100px;height: 100px;margin-left: 20px;margin-top: -10px;margin-bottom: 5px;">
+									   <p style="color:white;text-transform:uppercase;position: absolute;left: 55px;top: 45px;font-size: 50px;" >{{ request.user.profile.firstname.0 }}</p>
+									</div>
+							    {% endif %}
+								<ul class="author-social">
+									<li><a href="{{news.user.profile.facebooklink}}"><i class="fa fa-facebook"></i></a></li>
+									<li><a href="#"><i class="fa fa-twitter"></i></a></li>
+									<li><a href="#"><i class="fa fa-skype"></i></a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div class="clear" id="comment-list">
+						<div class="comments-area" id="comments">
+							<h2 class="comments-title">{{comments.count}} Comments</h2>
+							<div class="clearfix m-b20">
+								<ol id="comment-all" class="comment-list">
+									{% if comments %}
+									{% for comment in comments %}
+									<li id="comment-{{comment.id}}" class="comment">
+										<div class="comment-body">
+											<div class="comment-author vcard">
+												{% if comment.user.profile.profile_pic %}
+													<img  class="avatar photo" src="/{{comment.user.profile.profile_pic}}" alt="">
+												{% else %}
+													<div class="avatar photo"  style="background-color: black;width: 60px;height: 60px;">
+													   <p style="color:white;text-transform:uppercase;position: absolute;top: 18px;left: 18px;font-size: 30px;" >{{ comment.user.profile.firstname.0 }}</p>
+													</div>
+												{% endif %}
+												<a href="/viewprofile/{{comment.user.profile.username}}"> <cite class="fn">{{comment.user.profile.firstname}} {{comment.user.profile.lastname}}</cite></a> <span class="says">says:</span>
+											</div>
+											<div class="comment-meta"> <a href="#">{{comment.date_commented}}</a> </div>
+											<p style="white-space: pre-line;">{{comment.comment}}</p>
+											{% if user.id == comment.user_id %}
+												<div class="delete"><b class="small-btn" onclick="deleteCom({{comment.id}})"><i class="fa fa-trash"></i> Delete</b></div>
+											{% endif %}
+										</div>
+									</li>
+									{% endfor %}
+									{% else %}
+									<h6 class="font-weight-bold mt-3">Be the First One to Comment</h6>
+									{% endif %}
+								</ol>
+<!--								<b class="read-m">Load More Comments</b>-->
+								<div class="comment-respond" id="respond">
+									<h4 class="comment-reply-title" id="reply-title">Leave a Reply <small> <a style="display:none;" href="#" id="cancel-comment-reply-link" rel="nofollow">Cancel reply</a> </small> </h4>
+									{% if user.is_authenticated %}
+										<form class="comment-form" id="commentform" method="POST">
+											{% csrf_token %}
+											<p class="comment-form-comment">
+												<label for="comment">Comment</label>
+												<textarea rows="8" required name="comment-message" placeholder="Comment" id="comment"></textarea>
+											</p>
+											<p class="form-submit">
+												<input type="submit" value="Submit Comment" class="submit" id="submit" name="submit">
+											</p>
+										</form>
+									{% else %}
+										<h6 class="font-weight-bold mt-3">You need to login in in order to comment</h6>
+										<hr>
+										<a href="/login/?next=/newsPortal/{{news.id}}" style="background-color:#1a5cff" class="btn ">Login</a>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-4 col-xl-4">
+					<aside class="side-bar sticky-top">
+						<div class="widget">
+							<h6 class="widget-title">Search</h6>
+							<div class="search-bx style-1">
+								<form role="search" method="get">
+									<div class="input-group">
+										<input name="title_contains" class="form-control" placeholder="Enter your keywords..." type="text">
+										<span class="input-group-btn">
+											<button type="submit" class="fa fa-search text-primary"></button>
+										</span>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="widget recent-posts-entry">
+							<h6 class="widget-title">Recent Posts</h6>
+							<div class="widget-post-bx">
+								{% for news in form|slice:3 %}
+								<div class="widget-post clearfix">
+									<div class="ttr-post-media"> <img src="/{{news.news_pic}}" width="200" height="143" alt=""> </div>
+									<div class="ttr-post-info">
+										<div class="ttr-post-header">
+											<h6 class="post-title"><a href="/newsPortal/{{news.id}}/">{{news.heading|truncatewords:"15"}}</a></h6>
+										</div>
+										<ul class="media-post">
+											<li><a href="#"><i class="fa fa-calendar"></i>{{news.date_posted| date:"F d, Y"}}</a></li>
+											<li><a href="#"><i class="fa fa-comments-o"></i>{{news.getComments}} Comment</a></li>
+										</ul>
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+						<div class="widget widget-newslatter">
+							<h6 class="widget-title">Newsletter</h6>
+							<div class="news-box">
+								<p>Enter your e-mail and subscribe to our newsletter.</p>
+								<form class="subscription-form" action="http://educhamp.themetrades.com/demo/assets/script/mailchamp.php" method="post">
+									<div class="ajax-message"></div>
+									<div class="input-group">
+										<input name="dzEmail" required="required" type="email" class="form-control" placeholder="Your Email Address"/>
+										<button name="submit" value="Submit" type="submit" class="btn black radius-no">
+											<i class="fa fa-paper-plane-o"></i>
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="widget widget_gallery gallery-grid-4">
+							<h6 class="widget-title">Our News Gallery</h6>
+							<ul>
+								{% for pic in pics %}
+								<li><div><a href="#"><img src="/{{pic}}" alt=""></a></div></li>
+								{% endfor %}
+							</ul>
+						</div>
+						<div class="widget widget_tag_cloud">
+							<h6 class="widget-title">Tags</h6>
+							<div class="tagcloud">
+								{% for tag in tags %}
+								<a href="/newsPortal/category/{{tag}}">{{tag}}</a>
+								{% endfor %}
+							</div>
+						</div>
+					</aside>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$( document ).ready(function() {
+        $('#edit0').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget)
+          var dilemma = button.data('whatever')
+          var ansid = button.data('ansid')
+          var modal = $(this)
+          modal.find('.modal-body #report').attr('name', dilemma);
+          modal.find('.modal-body #ansid').val(ansid)
+        });
+    });
+
+    $(document).on('submit','#commentform',function(e){
+        e.preventDefault();
+
+		$.ajax({
+			type:'POST',
+			url:"{% url 'news-view' news.id %}",
+			data:{
+				'comment-message':$('#comment').val(),
+				'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+			},
+			success:function(response){
+				data= response.data
+				$("body").css("cursor", "wait");
+				var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+				var today = new Date();
+				var date = months[today.getMonth()]+'.'+' '+ today.getDate()+','+' '+today.getFullYear()+',';
+				var hr = today.getHours();
+				var min = today.getMinutes();
+				if (min < 10) {
+					min = "0" + min;
+				}
+				var ampm = "A.M";
+				if( hr > 12 ) {
+					hr -= 12;
+					ampm = "P.M";
+				}
+				var time = hr + ":" + min+ ' '+ ampm;
+				var dateTime = date+' '+time;
+				console.log(dateTime)
+				$('#commentform').trigger('reset')
+				window.setTimeout(function() {
+					$('.comments-title').empty()
+					$('.comments-title').append(`${response.count} Comments`)
+					$("body").css("cursor", "default");
+					$('#comment-all').append(
+						`
+						<li id="comment-${data.id}" class="comment">
+							<div class="comment-body">
+								<div class="comment-author vcard">
+									{% if request.user.profile.profile_pic %}
+										<img  class="avatar photo" src="/{{request.user.profile.profile_pic}}" alt="">
+									{% else %}
+										<div class="avatar photo"  style="background-color: black;width: 60px;height: 60px;">
+										   <p style="color:white;text-transform:uppercase;position: absolute;top: 18px;left: 18px;font-size: 30px;" >{{ request.user.profile.firstname.0 }}</p>
+										</div>
+									{% endif %}
+									<a href="/viewprofile/{{request.user.profile.username}}"> <cite class="fn">{{request.user.profile.firstname}} {{request.user.profile.lastname}}</cite></a> <span class="says">says:</span>
+								</div>
+								<div class="comment-meta"> <a href="#">${dateTime}</a> </div>
+								<p style="white-space: pre-line;">${data.comment}</p>
+								<div class="delete"><b class="btn-link" style="font-size:10px" onclick="deleteCom(${data.id})">Delete</b></div>
+							</div>
+						</li>
+						`
+					)
+				}, 1000);
+			},
+			error:function(response){
+				console.log(response)
+
+			},
+		});
+
+    });
+
+    function deleteCom(id) {
+	  var action = confirm("You are going to delete this comment?");
+	  if (action != false) {
+		$.ajax({
+			url: '{% url 'del-com' news.id %}',
+			data: {
+				'id': id,
+			},
+			success:function(response){
+				window.setTimeout(function() {
+					$('.comments-title').empty()
+					$('.comments-title').append(`${response.count} Comments`)
+					$('#comment-'+id).remove()
+				}, 1000);
+			}
+		});
+	  }
+	}
+</script>
+
+{% endblock %}

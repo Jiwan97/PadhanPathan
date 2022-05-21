@@ -5,6 +5,7 @@ from django.core import validators
 
 class User(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
+    is_first_time = models.BooleanField(default=True)
 
     def __str__(self):
         return self.email

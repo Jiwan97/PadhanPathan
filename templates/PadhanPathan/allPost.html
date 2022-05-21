@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+    <title>PadhanPathan</title>
+{% endblock%}
+
+{% block content %}
+
+
+{% if request.user.is_authenticated %}
+<div class="st container">
+    <div class="  row message-box4">
+        <h4>Recent Questions</h4>
+        <a class="addpost" href="{% url 'post_question' %}"><button type="submit"
+                class="btn btn-blue   text-center">Add Post</button></a>
+    </div>
+
+
+    <div class="row align-items-center">
+
+
+
+        <div class="row mb-5 ">
+            <div style="border-right: 1px solid; padding-right:0 !important; line-height:40px;" class="col-lg-2 ">
+
+                <ul class="section-nav">
+                    <div style="margin-top: 20px;" class="row">
+                        <li class="toc-entry toc-h2"><a href="#post_category"><i class="fa fa-list-alt" aria-hidden="true"></i> Post Category</a></li>
+                    </div>
+                </ul>
+
+            </div>
+
+            <div class=" col-lg-10">
+                <div id="overviews">
+                    <div class="container">
+                        <div class="row ">
+                            <div class="col-md-12 ">
+                                {% for i in postquestion %}
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3 card card24" style="color:black; font-size:20px;">
+                                            <div style="margin-top:10px;" class="ml-2 row">
+                                                <div style="margin-left:3px; " class="col-lg-12">
+                                                    <div class="row" style="position: relative;">
+                                                        <a><i class="fa fa-angle-up"
+                                                                style="font-weight:bold; font-size:20px;"
+                                                                aria-hidden="true"></i></a>
+                                                        <p style="margin-left:20px; " class=""><a class=""
+                                                                href="{% url 'question_details' i.id %}">{{i.question|truncatechars:50|safe}}</a></p>
+                                                        <div style="position: absolute; right: 2ch; top: -1.8ch;"><i
+                                                                class="fa fa-bookmark text-muted"
+                                                                aria-hidden="true"></i></div>
+                                                    </div>
+                                                </div>
+                                                <div style=" margin-top:-30px;" class="col-lg-12">
+                                                    <div class="row">
+                                                        <p style="font-weight:bold; font-size:15px;">20</p>
+                                                        <p style="margin-left:16px; margin-top:5px; font-size:10px; ">
+                                                            Posted By:{{ i.Posted_by }}</p>
+                                                        <p style="margin-left:20px; margin-top:5px; font-size:10px; ">
+                                                            Posted On: {{ i.Posted_date }}</p>
+
+                                                    </div>
+                                                </div>
+                                                <div style="margin-left:3px; margin-top:-30px" class="col-lg-12">
+                                                    <div class="row">
+                                                        <a><i class="fa fa-angle-down"
+                                                                style="font-weight:bold; font-size:20px;"
+                                                                aria-hidden="true"></i></a>
+                                                        <p style="margin-left:19px; margin-top:20px; font-size:15px; ">
+                                                            <a style="text-decoration:underline ! important;">19
+                                                                anwsers</a>
+                                                        </p>
+
+                                                    </div>
+                                                </div>
+                                                <div style="margin-left:3px; margin-top:-30px" class="col-lg-12">
+                                                    <div class="row">
+
+                                                        <p style="margin-left:32px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                            class="card">Django</p>
+                                                        <p style="margin-left:32px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                            class="card">python</p>
+                                                        <p style="margin-left:32px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                            class="card">html</p>
+                                                        <p style="margin-left:32px; margin-top:20px; font-size:15px; padding:0 10px 0px 10px; "
+                                                            class="card">ajax</p>
+
+                                                        <p style="margin-left:350px; margin-top:20px; font-size:15px; padding:0 9px 0px 9px; "
+                                                            class="card">Tu:22</p>
+                                                        <p style="margin-left:20px; margin-top:20px; font-size:15px; padding:0 9px 0px 9px; "
+                                                            class="card">Pu:22</p>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

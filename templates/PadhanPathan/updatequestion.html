@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+{% load hasReportedNews %}
+{% load static %}
+{% block title %}
+  <title>PadhanPathan</title>
+{% endblock%}
+
+{% block content %}
+<div id="st overviews">
+    <div class="container" style="margin-top:100px;">
+        <div class="row ">
+            <div class="col-md-12 ">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form action="" method="POST" enctype="multipart/form-data" novalidate">
+                            {% csrf_token %}
+                            <div class="mb-3 card card24" style="color:black; font-size:20px;">
+                                <p style="margin-left:16px; margin-top:5px; font-size:20px; ">Ho to Edit Your Post:</p>
+                                <ul>
+                                    <li>
+                                        <p style="margin-left:16px; margin-top:5px; font-size:12px; ">Correct minor Typos
+                                            and Error</p>
+                                    </li>
+                                    <li>
+                                        <p style="margin-left:16px; margin-top:-30px; font-size:12px; ">clarty meaning
+                                            without changing it</p>
+                                    </li>
+                                    <li>
+                                        <p style="margin-left:16px; margin-top:-30px; font-size:12px; ">Added related links
+                                            or resources.</p>
+                                    </li>
+                                </ul>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-12 col-lg-12 " for="id_content">Description</label>
+                                    <div class=" col-sm-12 col-lg-12 ">
+                                        {{form.media }}
+                                        {{ form.question }}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2 col-lg-2 " for="id_Tags">Language</label>
+                                    <div class=" col-sm-10 col-lg-10 ">
+                                        {{ form.language }}
+                                    </div>
+                                </div>
+                                {% comment %} <div class="row mb-3 ml-1 px-3">
+                                    <i class=" fa fa-exclamation-circle"></i>
+                                    <p class="ml-2" style=" font-size:12px; ">Add upto 5 tags to describe your question.</p>
+                                </div> {% endcomment %}
+                                <div class="row mb-3 ml-1 px-3"> <button type="submit"
+                                        class="btn btn-blue text-center">Update</button>
+                                    <button type="submit" class="ml-3 btn btn-blue text-center">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

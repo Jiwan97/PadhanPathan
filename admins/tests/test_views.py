@@ -11,6 +11,7 @@ class TestViews(TestCase):
         self.pathanurl1 = reverse('createcourse')
         self.pathanurl2 = reverse('allnews')
         self.pathanurl3 = reverse('newspost')
+
     def test_Allcourses(self):
         response = self.client.get(self.pathanurl)
 
@@ -41,3 +42,85 @@ class TestViews(TestCase):
 
         self.assertEquals(response.status_code, 302)
 
+    def test_ProfileUpdate(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_Edit_NewPortal(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_newcourses(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_edittest(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_reportCourse(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_CourseComment(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_CreateNEWSTAG(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_HideCourse(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_ReplyMessage(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_DeleteNews(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_ReportFakeNews(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_addComent(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+    def test_HideCourse2(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+    def test_HideQuestion(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_CreateQuestion(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_CommentQuestion(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_DeleteQuestion(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)

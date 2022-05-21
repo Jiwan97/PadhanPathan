@@ -4,6 +4,9 @@ from PadhanPathan.models import *
 
 from taggit.forms import TagWidget
 
+from admins.models import Response
+
+
 class NewsForm(ModelForm):
     class Meta:
         model = News
@@ -48,3 +51,9 @@ class MainExamForm(ModelForm):
     class Meta:
         model = ExamQuestion
         fields = ['question']
+
+class ResponseForm(ModelForm):
+    class Meta:
+        model = Response
+        fields = "__all__"
+        exclude = ['user', 'contactMessage']

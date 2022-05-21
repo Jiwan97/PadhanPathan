@@ -29,7 +29,9 @@ class EmailThread(threading.Thread):
 
     def run(self):
         self.email.send()
+
     print("done")
+
 
 def send_activation_email(user, request):
     print("hello")
@@ -68,7 +70,15 @@ def send_notification_email(user, request):
     if not settings.TESTING:
         EmailThread(email).start()
 
+def send_response_email(resp, content, request):
+    email_subject = 'Response from Learn To Earn'
+    email = EmailMultiAlternatives(subject=email_subject,
+                                   from_email=settings.EMAIL_FROM_USER,
+                                   to=[resp.email])
+    email.attach_alternative(content, "text/html")
 
+    if not settings.TESTING:
+        EmailThread(email).start()
 
 @unauthenticated_user
 def register(request):
@@ -145,8 +155,14 @@ def login_user(request):
                             send_notification_email(user, request)
 
                     login(request, user)
-                    messages.add_message(request, messages.SUCCESS,
-                                         f'Welcome {user.username}')
+
+                    if user.is_first_time:
+                        messages.add_message(request, messages.SUCCESS,
+                                             "You Must Update Your Profile")
+                    else:
+                        messages.add_message(request, messages.SUCCESS,
+                                             f'Welcome {user.username}')
+                        return redirect('/editprofile')
                     if 'next' in request.POST:
                         return redirect(request.POST.get('next'))
                     else:
@@ -187,7 +203,6 @@ def activate_user(request, uidb64, token):
     return render(request, 'accounts/activate-failed.html', {"user": user})
 
 
-
 @login_required()
 def show_profile(request):
     profile = request.user
@@ -215,6 +230,7 @@ def error_profile(request):
 @login_required()
 def edit_profile(request):
     profile = request.user.profile
+    user = request.user
     form = ProfileForm(instance=profile)
     form1 = ProfileForm2(instance=profile)
     if request.method == "POST":
@@ -228,6 +244,8 @@ def edit_profile(request):
             form = ProfileForm(request.POST, request.FILES, instance=profile)
             if form.is_valid():
                 form.save()
+                user.is_first_time = False
+                user.save()
                 return redirect('/editprofile')
             else:
                 errors(request, form)
@@ -243,4 +261,3 @@ def edit_profile(request):
                'form1': form1}
 
     return render(request, 'accounts/editProfile.html', context)
-

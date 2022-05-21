@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+    <title>PadhanPathan</title>
+{% endblock%}
+
+{% block content %}
+
+<div id="st overviews">
+    <div class="container" style="margin-top:100px;">
+        <div class="section-title row ">
+            <div class="col-md-12 ">
+                <h1 class="text-center text-uppercase"> Ask your question here </h1>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mb-3 card card24" style="color:black; font-size:20px;">
+                            <form action="{% url 'post_question' %}" method="POST" enctype="multipart/form-data" novalidate>
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label class="control-label col-sm-12 col-lg-12 " for="id_content">Ask your Questions to Public</label>
+                                    <div class=" col-sm-12 col-lg-12 ">
+                                        {{ form.media }}
+                                        {{ form.question }}
+                                        
+                                        <small style="color:red;">{{ form.question.errors }}</small>
+                                    </div>
+                                    <label class="control-label col-sm-2 col-lg-2 " for="id_Tags">Languages</label>
+                                    <div class=" col-sm-12 col-lg-12 ">
+                                       {{ form.language }}
+                                       <small style="color:red;">{{ form.language.errors }}</small>
+                                    </div>
+                                    <div class=" col-sm-12 col-lg-12 ">
+                                        <button class="btn btn-success" type="submit">Post Question</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock  %}
+

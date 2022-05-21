@@ -228,9 +228,11 @@ a {
                     var messages = $(response).find('#mesg')
                     var messages_c = $(messages).attr('class')
                     var url = $('#url').val();
+                    console.log(url)
                     var user = $('#username').val()
                     var text = `Welcome ${user}`
                     var text1= `Welcome Admin, ${user}`
+                    var EditPro=`You Must Update Your Profile`
                     if((messages.text()).toUpperCase() == text.toUpperCase()){
                         localStorage.setItem('myData', response);
                         $('#login').trigger("reset");
@@ -247,6 +249,10 @@ a {
                         }else{
                             window.location = "/admins-dashboard";
                         }
+                    }else if((messages.text()).toUpperCase() == EditPro.toUpperCase()) {
+                        localStorage.setItem('myData', response);
+                        $('#login').trigger("reset");
+                            window.location = "/editprofile";
                     }else {
                         $button.data("pressed", true);
                         $('#mesgg').removeAttr("class");

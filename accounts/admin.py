@@ -12,6 +12,7 @@ class UserAdmin(BaseAdmin):
             {
                 'fields': (
                     'is_email_verified',
+                    'is_first_time',
                 ),
             },
         ),

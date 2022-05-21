@@ -1,0 +1,169 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% block title %}
+     <title>PadhanPathan</title>
+{% endblock%}
+
+{% block content %}
+	<div class="all-title-box">
+		<div class="container text-center">
+			<h1>Contact<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
+		</div>
+	</div>
+
+    <div id="contact" class="section wb">
+        <div class="container">
+            <div class="section-title text-center">
+                <h3>Need Help? </h3>
+                <p class="lead">Lorem ipsum dolor sit amet <br>Lorem ipsum dolor sit ametLorem ipsum dolor sit amet</p>
+            </div>
+
+            <div class="row">
+
+                <div class="col-xl-6 col-md-12 col-sm-12">
+                    <div class="contact_form">
+                        <div id="message"></div>
+                        <form id="contactform" class="" action="" name="contactform" method="POST">
+                            {% csrf_token %}
+                            <div class="row row-fluid">
+                                {% if user.is_authenticated %}
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject">
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <textarea class="form-control" style="height:329px !important" name="comments" id="comments" rows="6" cols="50" placeholder="Give us more details.."></textarea>
+                                </div>
+
+                                {% else %}
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <input type="text" name="first_name" id="first_name" class="form-control" placeholder="First Name">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <input type="text" name="last_name" id="last_name" class="form-control" placeholder="Last Name">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <input type="email" name="email" id="email" class="form-control" placeholder="Your Email">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6">
+                                    <input type="text" name="phone" id="phone" class="form-control" placeholder="Your Phone">
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject">
+                                </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <textarea class="form-control" name="comments" id="comments" rows="6" placeholder="Give us more details.."></textarea>
+                                </div>
+                                {% endif %}
+                                <div class="text-center pd">
+                                    <button type="submit" value="SEND" id="submit" class="btn btn-light btn-radius btn-brd grd1 btn-block">Submit Message</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+				<div class="col-xl-6 col-md-12 col-sm-12">
+            		<div id="map">
+              			<iframe src="https://maps.google.com/maps?q=Kathmandu&amp;t=&amp;z=13&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="580px" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+            		</div>
+          		</div>
+            </div>
+        </div>
+    </div>
+{% if user.is_authenticated %}
+<script type="text/javascript">
+    $(document).on('submit','#contactform',function(e){
+        e.preventDefault();
+        $button = $("#contactform");
+        if ($button.data("pressed") !== true) {
+            $.ajax({
+                type:'POST',
+                url:"{% url 'contact' %}",
+                data:{
+                    'subject':$('#subject').val(),
+                    'comments':$('#comments').val(),
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success:function(response){
+                    $button.data("pressed", true);
+                    console.log(response)
+                    var messages = $(response).find('#mesg')
+                    console.log(messages)
+                    var messages_c = $(messages).attr('class')
+                    console.log(messages_c)
+                    console.log(messages.text())
+                    $('#mesgg').removeAttr("class");
+                    $('#mesgg').addClass(messages_c);
+                    $('#mesgg').text(messages.text());
+                    $('#mesgg').animate({left:'0px'},600);
+                    if(messages.text()=="You must enter every field to send messages to us"){
+                        window.setTimeout(function() {
+                                $('#mesgg').animate({left:'600px'});
+                                }, 5000);
+                    }else{
+                        $('#contactform').trigger("reset");
+                        window.setTimeout(function() {
+                                $('#mesgg').animate({left:'600px'});
+                                }, 5000);
+                    }
+                },
+                error:function(response){
+                    console.log(response)
+
+                },
+            });
+        }
+    });
+</script>
+{% else %}
+<script type="text/javascript">
+    $(document).on('submit','#contactform',function(e){
+        e.preventDefault();
+        $button = $("#contactform");
+        if ($button.data("pressed") !== true) {
+            $.ajax({
+                type:'POST',
+                url:"{% url 'contact' %}",
+                data:{
+                    'first_name':$('#first_name').val(),
+                    'last_name':$('#last_name').val(),
+                    'email':$('#email').val(),
+                    'phone':$('#phone').val(),
+                    'subject':$('#subject').val(),
+                    'comments':$('#comments').val(),
+                    'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+                },
+                success:function(response){
+                    $button.data("pressed", true);
+                    console.log(response)
+                    var error = $(response).find('#mesg')
+                    console.log(error)
+                    var error_c = $(error).attr('class')
+                    console.log(error_c)
+                    console.log(error.text())
+                    $('#mesgg').removeAttr("class");
+                    $('#mesgg').addClass(error_c);
+                    $('#mesgg').text(error.text());
+                    $('#mesgg').animate({left:'0px'},600);
+                    if(error.text()=="All field required"){
+                        window.setTimeout(function() {
+                                $('#mesgg').animate({left:'600px'});
+                                }, 5000);
+                    }else{
+                        $('#contactform').trigger("reset");
+                        window.setTimeout(function() {
+                                $('#mesgg').animate({left:'600px'});
+                                }, 5000);
+                    }
+
+                },
+                error:function(response){
+                    console.log(response)
+
+                },
+            });
+        }
+    });
+</script>
+
+{% endif %}
+{% endblock %}

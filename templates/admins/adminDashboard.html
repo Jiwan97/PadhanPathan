@@ -2,7 +2,7 @@
 {% load static %}
 {% load bootstrap %}
 {% block title %}
-    <title>Learn To Earn</title>
+     <title>PadhanPathan</title>
 {% endblock%}
 {% block content %}
 
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-xl-4 col-md-4">
             <div class="card bg-primary text-white mb-4">
-                <div style="font-weight: bold" class="card-body">Total News Published: 0</div>
+                <div style="font-weight: bold" class="card-body">Total News Published: {{totalNews}}</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
                     <a class="small text-white stretched-link" href="allNews">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
@@ -23,9 +23,9 @@
         </div>
         <div class="col-xl-4 col-md-4 ">
             <div class="card bg-warning text-white mb-4">
-                <div style="font-weight: bold"  class="card-body">Total Contact Messages Received : 0</div>
+                <div style="font-weight: bold"  class="card-body">Total Contact Messages Received : {{totalmssg}}</div>
                 <div class="card-footer d-flex align-items-center justify-content-between">
-                    <a class="small text-white stretched-link" href="">View Details</a>
+                    <a class="small text-white stretched-link" href="allContactMessages">View Details</a>
                     <div class="small text-white"><i class="fas fa-angle-right"></i></div>
                 </div>
             </div>
