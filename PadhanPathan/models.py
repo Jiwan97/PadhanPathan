@@ -123,3 +123,69 @@ class CourseReview(models.Model):
         for i in range(0, self.rate):
             list[i] = i
         return list
+
+
+class News(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    heading = models.CharField("Title", max_length=200, null=True, default="Not Updated",
+                               validators=[validators.MinLengthValidator(4)])
+    content = RichTextUploadingField("Put Your Content Here", null=True, default="Not Updated",
+                                     validators=[validators.MinLengthValidator(4)])
+
+    news_pic = models.ImageField("News Pic", max_length=500, upload_to='static/uploads',
+                                 default='static/images/newsDefault.jpg')
+    date_posted = models.DateTimeField(auto_now_add=True)
+
+    Tags = TaggableManager()
+
+    def __str__(self):
+        return self.heading
+
+    def getComments(self):
+        comment = NewsComment.objects.filter(news_id=self.pk).count()
+        return comment
+
+
+class NewsComment(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    news = models.ForeignKey(News, null=True, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=200, null=True, default="Not Updated",
+                               validators=[validators.MinLengthValidator(4)])
+
+    date_commented = models.DateTimeField(auto_now_add=True)
+
+class ExamModel(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, null=True, on_delete=models.CASCADE)
+    ExamNumber = models.PositiveSmallIntegerField('Exam Number', null=True
+                                                  )
+    ExamTitle = models.CharField('Title', max_length=500, null=True, default="Not Updated",
+                                 )
+    date = models.DateTimeField(auto_now_add=True)
+
+    def MCQ(self):
+        statement = ExamQNA.objects.filter(exammodel_id=self.pk).exists()
+        return statement
+
+    def ExamQ(self):
+        statement = ExamQuestion.objects.filter(exammodel_id=self.pk).exists()
+        return statement
+
+
+
+class ExamQNA(models.Model):
+    exammodel = models.ForeignKey(ExamModel, null=True, on_delete=models.CASCADE)
+    numb = models.PositiveSmallIntegerField("Number", default=0)
+    question = models.CharField(max_length=5000, null=True)
+    option1 = models.CharField("Option 1", max_length=5000, null=True)
+    option2 = models.CharField("Option 2", max_length=5000, null=True)
+    option3 = models.CharField("Option 3", max_length=5000, null=True)
+    option4 = models.CharField("Option 4", max_length=5000, null=True)
+    answer = models.CharField("Answer", max_length=5000, null=True)
+
+
+class ExamQuestion(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    exammodel = models.OneToOneField(ExamModel, null=True, on_delete=models.CASCADE)
+    question = RichTextUploadingField(max_length=5000, default="Paste Your Question in PDF Format HERE", null=True)
+    date = models.DateTimeField(auto_now_add=True)

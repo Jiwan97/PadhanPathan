@@ -13,8 +13,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Avg
 from json import dumps
 import math
-from background_task import background
-from background_task.models import CompletedTask
+# from background_task import background
+# from background_task.models import CompletedTask
 
 
 def home(request):
