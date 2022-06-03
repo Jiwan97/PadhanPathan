@@ -1,0 +1,65 @@
+{% load static %}
+<style>
+.msg {
+    margin: 0 !important;
+    margin-bottom: 4px !important;
+    margin-top: 90px !important;
+}
+.messages {
+    z-index: 1500;
+    position: fixed;
+    right: -1em;
+    margin-top: -1em;
+    list-style: none;
+    text-align: left;
+}
+</style>
+
+<ul class="messages" id="messages-list">
+    {% if messages %}
+        {% for message in messages %}
+        <li>
+            {% if message.tags %}
+                 <div id="mesg" class="alert alert-{{ message.tags }} msg fade show" role="alert">{{ message }}</div>
+            {% else %}
+                <div id="mesg" class="alert alert-info msg fade show" role="alert">{{ message }}</div>
+            {% endif %}
+        </li>
+        {% endfor %}
+    {% endif %}
+</ul>
+
+<script>
+    // logging key-value pairs of FormData object
+    function logFormData(data) {
+        for (const pair of data.entries()) {
+            console.log(pair[0] + ": " + pair[1]);
+        }
+    }
+    // fade out message alerts
+    function fade_alerts() {
+        alerts = document.getElementsByClassName("alert msg");
+            var i = alerts.length;
+            for (let elem of alerts) {
+                i--;
+                time = 3250+(1000*i);
+                setTimeout(function() {
+                    $(elem).animate({left:'600px'});
+                }, time);
+            }
+    }
+    // call fade out after DOMContentLoaded
+    window.addEventListener('DOMContentLoaded', (event) => {
+        fade_alerts();
+    });
+</script>
+<script>
+    $(document).ready(function(){
+        alerts = document.getElementsByClassName("alert msg");
+        for (let elem of alerts) {
+            $(elem).click(function(){
+                $(elem).animate({left:'600px'});
+            })
+        }
+    })
+</script>

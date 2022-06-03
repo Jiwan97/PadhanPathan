@@ -9,9 +9,9 @@ def index(request):
 
 urlpatterns = [
     path('test/', index),
-    path('home/', views.home, name='home'),
+    path('home/', views.home, ),
     path('', views.home, ),
-    path('courses/', views.courses, name='courses'),
+    path('courses/', views.courses),
     path('likedCourses/', views.Likedcourses),
     path('courseEnrolled/', views.enrolledCourse),
     path('courses/courseDesk/<int:course_id>/', views.courseDesk, name='courseDesk'),

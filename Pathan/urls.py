@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from background_task.models import Task
+# from background_task.models import Task
 
 from accounts.processTasks import process_tasks
 import debug_toolbar

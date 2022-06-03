@@ -9,7 +9,8 @@ class TestViews(TestCase):
         self.client = Client()
         self.pathanurl = reverse('allcourses')
         self.pathanurl1 = reverse('createcourse')
-        self.pathanurl2 = reverse('createcourse')
+        self.pathanurl2 = reverse('allnews')
+        self.pathanurl3 = reverse('newspost')
     def test_Allcourses(self):
         response = self.client.get(self.pathanurl)
 
@@ -24,3 +25,19 @@ class TestViews(TestCase):
         response = self.client.get(self.pathanurl1)
 
         self.assertEquals(response.status_code, 302)
+
+    def test_CreateExam(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_CreateTest(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+
+    def test_CreateNewsPost(self):
+        response = self.client.get(self.pathanurl3)
+
+        self.assertEquals(response.status_code, 302)
+

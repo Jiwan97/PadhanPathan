@@ -1,0 +1,965 @@
+{% extends 'layout.html' %}
+{% load static %}
+{% load hasLiked %}
+{% load hasAttemptedTest %}
+{% load hasAttemptedExam %}
+{% load bootstrap %}
+{% block title %}
+    <title>Learn To Earn</title>
+{% endblock%}
+
+{% block content %}
+<style>
+
+div.card-body p {
+    display:inline-grid;
+}
+.btn-darkpink {
+    background-color: #cb295e;
+    width: 150px;
+    color: #fff;
+    border-radius: 20px;
+    }
+.col-sm-2 {
+    max-width:400% !important;
+    }
+
+p a{
+    color:#0645ad !important;
+    }
+
+.checked {
+    color: #ffc600;
+}
+.bigStar {
+    transform:scale(1.3);
+}
+.my-btn {
+    background-color: inherit !important;
+    border: 0 !important;
+    transition: transform 0.2s ease-in-out 0s;
+    transition: color 0.3s ease;
+}
+.checkBtn {
+    color: green;
+    font-size:20px;
+    float:right;
+}
+</style>
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Review</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="rate-form" id="editForm" method="POST" action="#">
+            {% csrf_token %}
+          <div id="star_group" class="form-group">
+              {% for star in tagstars %}
+                {{ star|safe}}
+              {% endfor %}
+          </div>
+            <input hidden="hidden" id="rate_value1">
+          <div class="form-group">
+            <label for="edit-comment" class="col-form-label">Comment</label>
+            <textarea class="form-control" id="edit-comment"></textarea>
+          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close and Save Changes</button>
+                <button type="submit" class="btn btn-primary">Confirm Edit</button>
+            </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="{% static 'typography.css'%}">
+    <div class="all-title-box">
+		<div class="container text-center">
+			<h1>Recent News<span class="m_1">Lorem Ipsum dolroin gravida nibh vel velit.</span></h1>
+		</div>
+	</div>
+    <section id="corses-singel" class="pt-20 pb-120 gray-bg">
+        {% if enrollment %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="corses-singel-left mt-30">
+                        <div class="title">
+                            <h3>{{course.course_name}}</h3>
+                        </div>
+                        <div class="course-terms">
+                            <ul>
+                                <li>
+                                    <div class="teacher-name">
+                                        <div class="thum">
+                                            {% if course.user.profile.profile_pic %}
+                                                <img src="/{{course.user.profile.profile_pic}}" alt="Teacher">
+                                            {% else %}
+                                                <div class="rounded-circle"  style="background-color: black;width: 45px;height: 45px;margin-top: -5px;">
+                                                   <p style="color:white;text-transform:uppercase;font-size: 20px;position: relative;top: 9px;left: 17px;" >{{ course.user.profile.firstname.0 }}</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="name">
+                                            <span>Course Uploaded by</span>
+                                            <h6>{{course.user.profile.firstname}} {{course.user.profile.lastname}}</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="course-category">
+                                        <span>Category</span>
+                                        {% for tag in course.category.all|slice:1 %}
+                                        <h6>{{tag}} </h6>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="review">
+                                        <span>Review</span>
+                                        <ul id= "rated">
+                                            {% if course.getStars %}
+                                            {% for i in course.getStars %}
+                                                {% if 'half' in i %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star-half-o"></i></li>
+                                                {% elif '' in i %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                {% else %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star"></i></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                            {% endif %}
+                                                <li  class="rating"><i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="corses-singel-image pt-50">
+                            <img src="/{{course.course_pic}}" alt="Courses">
+                        </div>
+
+                        <div class="corses-tab mt-30">
+                            <ul class="nav nav-justified" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="curriculam-tab" data-toggle="tab" href="#curriculam" role="tab" aria-controls="curriculam" aria-selected="false">Curriculam</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="exam-tab" data-toggle="tab" href="#test" role="tab" aria-controls="test" aria-selected="false">Test</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                    <div class="overview-description">
+                                        <div class="singel-description pt-40">
+                                            <h6>Course Summery</h6>
+                                            <p>{{course.course_summary}}</p>
+                                        </div>
+                                        <div class="singel-description pt-40">
+                                            <h6>What u need to know before Learning this Course?</h6>
+                                            <p>{{course.to_learn|safe}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
+                                    {% if lesson %}
+                                    <div class="curriculam-cont">
+                                        <div class="title">
+                                            <h6>{{course.course_name}}</h6>
+                                        </div>
+                                        <div class="accordion" id="accordionExample">
+                                            {% for lesson in lesson %}
+                                            <div class="card">
+                                                <div class="card-header" style="padding: 10px 20px 0px;" id="heading{{lesson.modulenumber}}">
+                                                    <a href="#" data-toggle="collapse" class="collapsed" data-target="#head{{lesson.modulenumber}}" aria-expanded="false" aria-controls="head{{lesson.modulenumber}}">
+                                                        <ul style="margin-bottom:15px;">
+                                                            <li><i class="fa fa-file-o"></i></li>
+                                                            <li><span class="lecture">Lecture {{lesson.modulenumber}}</span></li>
+                                                            <li class="wordwrap"><span class="head">{{lesson.module}}</span></li>
+                                                            <li><span class="time d-none d-md-block"><i class="fa fa-clock-o"></i> <span> {{lesson.get_readtime}}</span></span></li>
+                                                        </ul>
+                                                    </a>
+                                                </div>
+                                                <div id="head{{lesson.modulenumber}}" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
+                                                    <div class="card-body">
+                                                       {{lesson.ModuleLecture|safe}}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="curriculam-cont">
+                                        <div class="pt-20">
+                                            <p>No Lesson/Modules Have been Updated for this course</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="tab-pane fade" id="test" role="tabpanel" aria-labelledby="test-tab">
+                                    {% if exam %}
+                                    <div class="curriculam-cont">
+                                        <div class="title">
+                                            <h6>{{course.course_name}}</h6>
+                                        </div>
+                                        <div class="accordion">
+
+                                            {% for exam in exam %}
+                                            {% if exam.MCQ or exam.ExamQ %}
+                                            <div class="card">
+                                                <div class="card-header" style="padding: 10px 20px 0px;" id="heading1{{exam.ExamNumber}}">
+                                                    <a href="#" data-toggle="collapse" class="a-button collapsed" data-target="#head1{{exam.ExamNumber}}" aria-expanded="false" aria-controls="head1{{exam.ExamNumber}}">
+                                                        <ul style="margin-bottom:15px;">
+                                                            <li><i class="fa fa-clipboard"></i></li>
+                                                            <li><span class="lecture">Test {{exam.ExamNumber}}</span></li>
+                                                            <li class="wordwrap"><span class="head">{{exam.ExamTitle}}</span></li>
+                                                            <li></li>
+                                                        </ul>
+                                                    </a>
+                                                </div>
+                                                <div id="head1{{exam.ExamNumber}}" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
+                                                    <div class="card-body">
+                                                      <div class="container-fluid">
+                                                          <div class="row">
+                                                              <div class="col-lg-12 col-md-12 col-sm-12">
+                                                                <ul>
+                                                                    {% if exam.MCQ %}
+                                                                    <li style="display:block; padding:5px 0px">
+                                                                        <i style="margin-right: 10px;" class="fa fa-arrow-right" aria-hidden="true"></i><span style="font-size: 15px; margin-right: 90px;">Test</span><a style="color: black;font-size: 16px;font-weight: 500;" href="/courses/courseDesk/exam/{{course.id}}/{{exam.id}}/">{{exam.ExamTitle}} Test{% if request.user|hasAttemptedTest:exam.id %} <span class="checkBtn"><i class="fa fa-check-circle"></i></span>{% endif %}</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                    {% if exam.ExamQ %}
+                                                                    <li style="display:block; padding:5px 0px">
+                                                                        <i style="margin-right: 10px;" class="fa fa-arrow-right" aria-hidden="true"></i><span style="font-size: 15px; margin-right: 80px;">Exam</span><a style="color: black;font-size: 16px;font-weight: 500;" href="/courses/courseDesk/exam2/{{course.id}}/{{exam.id}}/">{{exam.ExamTitle}} Exam {% if request.user|hasAttemptedExam:exam.id %} <span class="checkBtn"><i class="fa fa-check-circle"></i></span>{% endif %}</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                </ul>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="curriculam-cont">
+                                        <div class="pt-20">
+                                            <p>Test hasn't been Updated for this course</p>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                    <div class="reviews-cont">
+                                        <div class="title">
+                                            <h6>Student Reviews</h6>
+                                        </div>
+                                        <ul style="list-style:none" id="reviewSec">
+                                        {% if comments %}
+                                           {% for comment in comments %}
+                                           <li id="comment-{{comment.id}}">
+                                               <div class="singel-reviews">
+
+                                                   <div class="reviews-author" {% if comment.user_id == request.user.id %} style="background-color:#f9f8f8; border-radius:5px" {% endif %} >
+                                                        <div class="author-thum">
+                                                            {% if comment.user.profile.profile_pic %}
+                                                                <img src="/{{comment.user.profile.profile_pic}}" alt="Reviews">
+                                                            {% else %}
+                                                                <div style="background-color: black;width: 70px;height: 70px;border-radius:5px;">
+                                                                   <p style="color:white;text-transform:uppercase;font-size: 35px;position: relative;top: 22px;left: 23px;" >{{ comment.user.profile.firstname.0 }}</p>
+                                                                </div>
+                                                            {% endif %}
+                                                        </div>
+                                                        <div class="author-name">
+
+                                                            <h6>{{comment.user.profile.firstname}} {{comment.user.profile.lastname}}  {% if comment.user.is_staff %} <b style="background-color:#da0b4e;" class="badge badge-info ml-2">Admin</b> {% endif %}</h6>
+                                                            <span>{{comment.date_commented| date:"F d, Y"}}</span>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="reviews-description pt-20">
+
+                                                        <div id="rate-data-{{comment.id}}" class="rating">
+                                                            <ul>
+                                                                {% for i in comment.stars %}
+                                                                {% if '' in i %}
+                                                                <li><i style="font-size:12px; color:#d1d1d1;" class="fa fa-star"></i></li>
+                                                                {% else %}
+                                                                <li><i style="font-size:12px;" class="fa fa-star"></i></li>
+                                                                {% endif %}
+                                                                {% endfor %}
+                                                                {% if comment.edited %}
+                                                                <li style="float: right; padding: 7px 7px 0 0; font-size:12px; margin-top: -94px;" class="text-muted">Edited</li>
+                                                                {% endif %}
+                                                            </ul>
+
+                                                            {% if user.id == comment.user_id %}
+                                                            <b style="float: right;  margin-top: -20px;" class="small-btn" onclick="deleteRev({{comment.id}})"><i class="fa fa-trash"></i> Delete</b>
+                                                            <b style="float: right; margin-right: 50px; margin-top: -20px" data-target="#edit" data-toggle="modal" data-whatever="{{comment.comment}}" data-rate="{{comment.rate}}" id="edit_data" class="small-btn"><i class="fa fa-edit"></i> Edit</b>
+                                                            {% endif %}
+                                                        </div>
+                                                        <p id="comment-data-{{comment.id}}" style="word-wrap:break-word; line-height:28px; white-space: pre-line;">{{comment.comment}}</p>
+                                                    </div>
+                                                </div>
+                                           </li>
+                                           {% endfor %}
+                                        {% else %}
+                                        <h6 id="first_one" class="mt-3">Be the first one to give a review to this course</h6>
+                                        {% endif %}
+                                        </ul>
+                                        <div class="title pt-15">
+                                            <h6>Leave A Review</h6>
+                                        </div>
+                                        <div class="reviews-form">
+                                            {% if can_review %}
+                                            <form class="rate-form" id="reviewForm" method="POST" action="#"><h6 class="font-weight-bold mt-3">You have already rated this course</h6></form>
+                                            {% else %}
+                                            <form class="rate-form" id="reviewForm" method="POST" action="#">
+                                                {% csrf_token %}
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <div class="form-singel">
+                                                            <i style="padding-right:5px;" class="fa fa-star  my-btn" id="first"></i>
+                                                            <i style="padding-right:5px;" class="fa fa-star  my-btn" id="second"></i>
+                                                            <i style="padding-right:5px;" class="fa fa-star  my-btn" id="third"></i>
+                                                            <i style="padding-right:5px;" class="fa fa-star  my-btn" id="fourth"></i>
+                                                            <i style="padding-right:5px;" class="fa fa-star  my-btn" id="fifth"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div hidden="hidden" id="rate_value"></div>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-singel">
+                                                            <textarea required name="comment-message" id="comment" placeholder="Comment"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-singel">
+                                                            <button type="submit"  class="btn main-btn">Post Review</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="releted-courses pt-20">
+                        <div class="title">
+                            <h3>Releted Courses</h3>
+                        </div>
+                        <div class="row">
+                            {% for course in related %}
+                            <div class="col-md-6">
+                                <div class="singel-course mt-20">
+                                    <div class="thum">
+                                        <div class="image">
+                                            <img  src="/{{course.course_pic}}" alt="Course" height="190px">
+                                        </div>
+                                        <div class="price">
+                                            <span>Free</span>
+                                        </div>
+                                    </div>
+                                    <div class="cont">
+                                        <ul>
+                                            {% if course.getStars %}
+                                            {% for i in course.getStars %}
+                                                {% if 'half' in i %}
+                                                <li><i class="fa fa-star-half-o"></i></li>
+                                                {% elif '' in i %}
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                {% else %}
+                                                <li><i class="fa fa-star"></i></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                            {% endif %}
+                                        </ul>
+                                        <span style="float:right;"> <i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</span>
+                                        <a href="/courses/courseDesk/{{course.id}}"><h4>{{course.course_name}}</h4></a>
+                                        <div class="course-teacher">
+                                            <div class="thum">
+                                                <a href="#">
+                                                    {% if course.user.profile.profile_pic %}
+                                                        <img src="/{{course.user.profile.profile_pic}}" alt="teacher">
+                                                    {% else %}
+                                                        <div class="rounded-circle"  style="background-color: black;width: 40px;height: 40px;margin-top: 5px;position: relative;top: -3px;">
+                                                           <p style="color:white;text-transform:uppercase;font-size: 20px;position: relative; top: 7px;left: 14px;" >{{ course.user.profile.firstname.0 }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                            <div class="name">
+                                                <a href="#"><h6>{{course.user.profile.firstname}} {{course.user.profile.lastname}}</h6></a>
+                                            </div>
+                                            <div class="admin">
+                                                <ul>
+                                                    <li><a href="#"><i class="fa fa-user"></i><span>{{course.getEnroll}}</span></a></li>
+                                                    {% if request.user|hasLiked:course.id %}
+                                                    <li><a><i id="like-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer; color:#ffc600"></i><span id="count-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                    {% else %}
+                                                    <li><a><i id="like-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer;"></i><span id="count-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row sticky-top">
+                        <div class="col-lg-12 col-md-6">
+                            <div class="You-makelike mt-30">
+                                <h4>Other Courses</h4>
+                                {% for course in courselike %}
+                                <div class="singel-makelike mt-20">
+                                    <div class="image">
+                                        <img src="{% static 'images/slider-01.jpg'%}" alt="Image">
+                                    </div>
+                                    <div class="cont">
+                                        <a href="/courses/courseDesk/{{course.id}}"><h4>{{course.course_name}}</h4></a>
+                                        <ul>
+                                            <li><a href="#"><i class="fa fa-user"></i>{{course.getEnroll}}</a></li>
+                                            <li>Free</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="corses-singel-left mt-30">
+                        <div class="title">
+                            <h3>{{course.course_name}}</h3>
+                        </div>
+                        <div class="course-terms">
+                            <ul>
+                                <li>
+                                    <div class="teacher-name">
+                                        <div class="thum">
+                                            {% if course.user.profile.profile_pic %}
+                                                <img src="/{{course.user.profile.profile_pic}}" alt="Teacher">
+                                            {% else %}
+                                                <div class="rounded-circle"  style="background-color: black;width: 45px;height: 45px;margin-top: -5px;">
+                                                   <p style="color:white;text-transform:uppercase;font-size: 20px;position: relative;top: 9px;left: 17px;" >{{ course.user.profile.firstname.0 }}</p>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="name">
+                                            <span>Course Uploaded by</span>
+                                            <h6>{{course.user.profile.firstname}} {{course.user.profile.lastname}}</h6>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="course-category">
+                                        <span>Category</span>
+                                        {% for tag in course.category.all|slice:1 %}
+                                        <h6>{{tag}} </h6>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="review">
+                                        <span>Review</span>
+                                        <ul>
+                                            {% if course.getStars %}
+                                            {% for i in course.getStars %}
+                                                {% if 'half' in i %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star-half-o"></i></li>
+                                                {% elif '' in i %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                {% else %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star"></i></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                                <li><i style="color: #ffc600;" class="fa fa-star-o"></i></li>
+                                            {% endif %}
+                                                <li  class="rating"><i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="corses-singel-image pt-50">
+                            <img src="/{{course.course_pic}}" alt="Courses">
+                        </div>
+
+                        <div class="corses-tab mt-30">
+                            <ul class="nav nav-justified" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="active" id="overview-tab" data-toggle="tab" href="#overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="curriculam-tab" data-toggle="tab" href="#curriculam" role="tab" aria-controls="curriculam" aria-selected="false">Curriculam</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews" aria-selected="false">Reviews</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+                                    <div class="overview-description">
+                                        <div class="singel-description pt-40">
+                                            <h6>Course Summery</h6>
+                                            <p>{{course.course_summary}}</p>
+                                        </div>
+                                        <div class="singel-description pt-40">
+                                            <h6>What u need to know before Learning this Course?</h6>
+                                            <p>{{course.to_learn|safe}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="curriculam" role="tabpanel" aria-labelledby="curriculam-tab">
+                                    <div class="curriculam-cont">
+                                        <div class="pt-20">
+                                            <h6>Haven't you enrolled yet?</h6>
+                                            <p>You can enroll this course by clicking on Enroll Now on the right side of your screen</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                                    <div class="overview-description">
+                                        <div class="singel-description pt-40">
+                                            <h6>Haven't you enrolled yet?</h6>
+                                            <p>In order to give review you must be Enrolled to this course</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="row sticky-top">
+                        <div class="col-lg-12 col-md-6">
+                            <div class="course-features mt-30">
+                               <h4>Course Features </h4>
+                                <ul>
+                                    <li><i class="fa fa-clock-o"></i>Duaration : <span>10 Hours</span></li>
+                                    <li><i class="fa fa-clone"></i>Module Available: {{modulecount}}</li>
+                                    <li><i class="fa fa-beer"></i>Test Available? :  <span> Yes</span></li>
+                                    <li><i class="fa fa-user"></i>Students Enrolled : {{enrollcount}}</li>
+                                </ul>
+                                <div class="price-button pt-10">
+                                    <span>Price : <b>Free</b></span>
+                                    <a href="/courseEnroll/{{course.id}}" onclick="return confirm('You wil be enrolled to this course')" class="main-btn">Enroll Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-6">
+                            <div class="You-makelike mt-30">
+                                <h4>Other Courses</h4>
+                                {% for course in courselike %}
+                                <div class="singel-makelike mt-20">
+                                    <div class="image">
+                                        <img src="{% static 'images/slider-01.jpg'%}" alt="Image">
+                                    </div>
+                                    <div class="cont">
+                                        <a href="/courses/courseDesk/{{course.id}}"><h4>{{course.course_name}}</h4></a>
+                                        <ul>
+                                            <li><a href="#"><i class="fa fa-user"></i>{{course.getEnroll}}</a></li>
+                                            <li>Free</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="releted-courses pt-95">
+                        <div class="title">
+                            <h3>Releted Courses</h3>
+                        </div>
+                        <div class="row">
+                            {% for course in related %}
+                            <div class="col-md-6">
+                                <div class="singel-course mt-30">
+                                    <div class="thum">
+                                        <div class="image">
+                                            <img  src="/{{course.course_pic}}" alt="Course" height="190px">
+                                        </div>
+                                        <div class="price">
+                                            <span>Free</span>
+                                        </div>
+                                    </div>
+                                    <div class="cont">
+                                        <ul>
+                                            {% if course.getStars %}
+                                            {% for i in course.getStars %}
+                                                {% if 'half' in i %}
+                                                <li><i class="fa fa-star-half-o"></i></li>
+                                                {% elif '' in i %}
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                {% else %}
+                                                <li><i class="fa fa-star"></i></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% else %}
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                                <li><i class="fa fa-star-o"></i></li>
+                                            {% endif %}
+                                        </ul>
+                                        <span style="float:right;"> <i class="fa fa-comments-o"></i> {{course.getReview}} {% if 1 == course.getReview or 0 == course.getReview %} Review {% else %} Reviews {% endif %}</span>
+                                        <a href="/courses/courseDesk/{{course.id}}"><h4>{{course.course_name}}</h4></a>
+                                        <div class="course-teacher">
+                                            <div class="thum">
+                                                <a href="#">
+                                                    {% if course.user.profile.profile_pic %}
+                                                        <img src="/{{course.user.profile.profile_pic}}" alt="teacher">
+                                                    {% else %}
+                                                        <div class="rounded-circle"  style="background-color: black;width: 40px;height: 40px;margin-top: 5px;position: relative;top: -3px;">
+                                                           <p style="color:white;text-transform:uppercase;font-size: 20px;position: relative; top: 7px;left: 14px;" >{{ course.user.profile.firstname.0 }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                            <div class="name">
+                                                <a href="#"><h6>{{course.user.profile.firstname}} {{course.user.profile.lastname}}</h6></a>
+                                            </div>
+                                            <div class="admin">
+                                                <ul>
+                                                    <li><a href="#"><i class="fa fa-user"></i><span>{{course.getEnroll}}</span></a></li>
+                                                    {% if request.user|hasLiked:course.id %}
+                                                    <li><a><i id="like-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer; color:#ffc600"></i><span id="count-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                    {% else %}
+                                                    <li><a><i id="like-{{course.id}}" onclick="like({{course.id}})" class="fa fa-heart" style="cursor:pointer;"></i><span id="count-{{course.id}}" >{{course.getLikes}}</span></a></li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </section>
+
+<script src="/static/js/StarRating/star.js"></script>
+<script type="text/javascript">
+
+
+    $( document ).ready(function() {
+        $('#edit').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget)
+          var recipient = button.data('whatever')
+          var rate = button.data('rate')
+          var modal = $(this)
+
+          modal.find('.modal-body textarea').val(recipient)
+          modal.find('.modal-body #rate_value1').val(rate)
+          $.getScript( "/static/js/StarRating/starformodal.js");
+        });
+    });
+
+    function like(id) {
+        $.ajax({
+            url: '{% url 'courseLike' %}',
+            data: {
+                'id': id,
+            },
+            success:function(response){
+                var messages = $(response).find('#mesg')
+                var messages_c = $(messages).attr('class')
+                var text = $('#count-'+id).text();
+                $('#mesgg').removeAttr("class");
+                $('#mesgg').addClass(messages_c);
+                $('#mesgg').text(messages.text());
+                $('#mesgg').animate({left:'0px'},600);
+                if(messages.text()=="You have saved this course for later"){
+                    $('.fa-heart').css('pointer-events', 'none');
+                    value =parseInt(text) + 1;
+                    $('#count-'+id).empty()
+                    $('#count-'+id).append(`${value}`)
+                    $('#like-'+id).css("color","#ffc600");
+                    window.setTimeout(function() {
+                        $('.fa-heart').css('pointer-events', '');
+                        $('#mesgg').animate({left:'600px'});
+                    }, 3000);
+                }else if (messages.text()=="This course has been removed from your wishlist"){
+                    $('.fa-heart').css('pointer-events', 'none');
+                    value =parseInt(text) - 1;
+                    $('#count-'+id).empty()
+                    $('#count-'+id).append(`${value}`)
+                    $('#like-'+id).css('color', '');
+                    window.setTimeout(function() {
+                        $('.fa-heart').css('pointer-events', '');
+                        $('#mesgg').animate({left:'600px'});
+                    }, 3000);
+                }
+            }
+        });
+	}
+
+
+
+
+    $(document).on('submit','#reviewForm',function(e){
+        e.preventDefault();
+
+		$.ajax({
+			type:'POST',
+			url:"{% url 'courseDesk' course.id %}",
+			data:{
+			    'rate':$('#rate_value').text(),
+				'comment-message':$('#comment').val(),
+				'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+			},
+			success:function(response){
+				data= response.data
+				$("body").css("cursor", "wait");
+				var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+				var today = new Date();
+				var date = months[today.getMonth()]+' '+today.getDate()+','+' '+today.getFullYear();
+				var dateTime = date
+				var d = 'list'
+				console.log(dateTime)
+				$('#reviewForm').empty();
+				$('#first_one').remove();
+				window.setTimeout(function() {
+				    $('#reviewForm').append(`<h6 class="font-weight-bold mt-3">You have just left your rating for this course</h6>`)
+					$("body").css("cursor", "default");
+					$('#rated').empty();
+					$('#rated').append(
+                        `
+                        ${response.total_star[0]}
+                        ${response.total_star[1]}
+                        ${response.total_star[2]}
+                        ${response.total_star[3]}
+                        ${response.total_star[4]}
+                        <li  class="rating"><i class="fa fa-comments-o"></i> ${response.count} ${response.review}</li>
+                        `
+                    );
+					$('#reviewSec').append(
+						`
+						<li id="comment-${data.id}">
+                           <div class="singel-reviews">
+                                <div class="reviews-author" style="background-color:#f9f8f8; border-radius:5px;" >
+                                    <div class="author-thum">
+                                        {% if request.user.profile.profile_pic %}
+                                            <img src="/{{request.user.profile.profile_pic}}" alt="Reviews">
+                                        {% else %}
+                                            <div style="background-color: black;width: 70px;height: 70px;border-radius:5px;">
+                                               <p style="color:white;text-transform:uppercase;font-size: 35px;position: relative;top: 22px;left: 23px;" >{{ request.user.profile.firstname.0 }}</p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="author-name">
+                                        <h6>{{request.user.profile.firstname}} {{request.user.profile.lastname}}  {% if request.user.is_staff %} <b style="background-color:#da0b4e;" class="badge badge-info ml-2">Admin</b> {% endif %}</h6>
+                                        <span>${dateTime}</span>
+                                    </div>
+                                </div>
+                                <div class="reviews-description pt-20">
+                                    <div id="rate-data-${data.id}" class="rating">
+                                        <ul>
+                                            ${response.tagstar[0]}
+                                            ${response.tagstar[1]}
+                                            ${response.tagstar[2]}
+                                            ${response.tagstar[3]}
+                                            ${response.tagstar[4]}
+                                        </ul>
+                                        <b style="float: right;  margin-top: -20px;" class="small-btn" onclick="deleteRev(${data.id})"><i class="fa fa-trash"></i> Delete</b>
+                                        <b style="float: right; margin-right: 50px; margin-top: -20px" data-target="#edit" data-toggle="modal" data-whatever="${data.comment}" data-rate="${data.rate}" id="edit_data" class="small-btn"><i class="fa fa-edit"></i> Edit</b>
+                                    </div>
+                                    <p id="comment-data-${data.id}" style="white-space: pre-line;">${data.comment}</p>
+                                </div>
+                            </div>
+                       </li>
+						`
+					)
+					$('#star_group').append(`
+					    ${response.poststar_rate[0]}
+                        ${response.poststar_rate[1]}
+                        ${response.poststar_rate[2]}
+                        ${response.poststar_rate[3]}
+                        ${response.poststar_rate[4]}
+					`)
+				}, 200);
+			},
+			error:function(response){
+				console.log(response)
+
+			},
+		});
+
+    });
+
+    function deleteRev(id) {
+	  var action = confirm("You are going to delete this comment?");
+	  if (action != false) {
+		$.ajax({
+			url: '{% url 'del-rev' course.id %}',
+			data: {
+				'id': id,
+			},
+			success:function(response){
+				window.setTimeout(function() {
+					$('#rated').empty();
+					$('#rated').append(
+                        `
+                        ${response.total_star[0]}
+                        ${response.total_star[1]}
+                        ${response.total_star[2]}
+                        ${response.total_star[3]}
+                        ${response.total_star[4]}
+                        <li  class="rating"><i class="fa fa-comments-o"></i> ${response.count} ${response.review}</li>
+                        `
+                    );
+					$('#comment-'+id).remove()
+					$('#reviewForm').empty();
+					$('#reviewForm').append(
+					    `
+                        {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-singel">
+                                        <i style="padding-right:5px;" class="fa fa-star  my-btn" id="first"></i>
+                                        <i style="padding-right:5px;" class="fa fa-star  my-btn" id="second"></i>
+                                        <i style="padding-right:5px;" class="fa fa-star  my-btn" id="third"></i>
+                                        <i style="padding-right:5px;" class="fa fa-star  my-btn" id="fourth"></i>
+                                        <i style="padding-right:5px;" class="fa fa-star  my-btn" id="fifth"></i>
+                                    </div>
+                                </div>
+                                <div hidden="hidden" id="rate_value"></div>
+                                <div class="col-lg-12">
+                                    <div class="form-singel">
+                                        <textarea required name="comment-message" id="comment" placeholder="Comment"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div class="form-singel">
+                                        <button type="submit"  class="btn main-btn">Post Review</button>
+                                    </div>
+                                </div>
+                            </div>
+					    `
+	                );
+	                $('#star_group').empty()
+	                $.getScript( "/static/js/StarRating/star.js");
+				}, 1000);
+			}
+		});
+	  }
+	}
+
+    $(document).on('submit','#editForm',function(e){
+        e.preventDefault();
+        var data= $('#rate_value1').val()
+        console.log(data)
+
+		$.ajax({
+			url:"{% url 'edit-rev' course.id %}",
+			data:{
+			    'edited_rate':$('#rate_value1').val(),
+				'commented_data':$('#edit-comment').val(),
+				'csrfmiddlewaretoken' : $("input[name=csrfmiddlewaretoken]").val()
+			},
+			success:function(response){
+				data= response.data
+				$("body").css("cursor", "wait");
+				$('#comment-data-'+data.id).empty()
+				$('#comment-data-'+data.id).append(`${data.comment}`)
+				$('#rate-data-'+data.id).empty()
+				$('#rate-data-'+data.id).append(`
+				    <ul>
+                        ${response.tagstar[0]}
+                        ${response.tagstar[1]}
+                        ${response.tagstar[2]}
+                        ${response.tagstar[3]}
+                        ${response.tagstar[4]}
+                        <li style="float: right; padding: 7px 7px 0 0; font-size:12px; margin-top: -94px;" class="text-muted">Edited</li>
+                    </ul>
+                    <b style="float: right;  margin-top: -20px;" class="small-btn" onclick="deleteRev(${data.id})"><i class="fa fa-trash"></i> Delete</b>
+                    <b style="float: right; margin-right: 50px; margin-top: -20px" data-target="#edit" data-toggle="modal" data-whatever="${data.comment}" data-rate="${data.rate}" id="edit_data" class="small-btn"><i class="fa fa-edit"></i> Edit</b>
+				`)
+				window.setTimeout(function() {
+					$("body").css("cursor", "default");
+					$('#rated').empty();
+					$('#rated').append(
+                        `
+                        ${response.total_star[0]}
+                        ${response.total_star[1]}
+                        ${response.total_star[2]}
+                        ${response.total_star[3]}
+                        ${response.total_star[4]}
+                        <li  class="rating"><i class="fa fa-comments-o"></i> ${response.count} ${response.review}</li>
+                        `
+                    );
+				}, 200);
+			},
+			error:function(response){
+				console.log(response)
+
+			},
+		});
+
+    });
+
+</script>
+{% endblock %}
