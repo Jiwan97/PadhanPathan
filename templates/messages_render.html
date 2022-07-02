@@ -1,0 +1,21 @@
+<ul class="messages" id="messages-list">
+        <li>
+            <div id="mesgg" style="left:400px" role="alert"></div>
+        </li>
+</ul>
+
+<script>
+    $( document ).ready(function() {
+        var data = localStorage.getItem('myData');
+        localStorage.clear();
+        var messages = $(data).find('#mesg')
+        var messages_c = $(messages).attr('class')
+        $('#mesgg').removeAttr("class");
+        $('#mesgg').addClass(messages_c);
+        $('#mesgg').text(messages.text());
+        $('#mesgg').animate({left:'0px'},500);
+        window.setTimeout(function() {
+            $('#mesgg').animate({left:'400px'});
+            }, 4000);
+    });
+</script>
